@@ -10,9 +10,7 @@ client-side.
 
 `vendor/affiro.min.js` is a vendored, built copy of the [`@sandgarden/affiro`](https://www.npmjs.com/package/@sandgarden/affiro)
 npm package (this extension's own signature-monitoring code, packaged for embedding on any page; source lives in the
-public [sandgardenhq/affiro-js](https://github.com/sandgardenhq/affiro-js) repo). Re-vendor after bumping that
-dependency by running `npm install && npm run vendor`, which also refreshes the playground server's copy at
-`../cmd/playground/internal/logic/assets/static/affiro.min.js`.
+public [sandgardenhq/affiro-js](https://github.com/sandgardenhq/affiro-js) repo). 
 
 ## Loading unpacked, for local testing
 
