@@ -1,0 +1,17 @@
+{
+  "name": "affiro",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "node --test",
+    "vendor": "cp node_modules/@sandgarden/affiro/dist/affiro.min.js vendor/affiro.min.js && cp node_modules/@sandgarden/affiro/dist/affiro.min.js ../cmd/playground/internal/logic/assets/static/affiro.min.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "Apache-2.0",
+  "packageManager": "pnpm@10.28.2",
+  "dependencies": {
+    "@sandgarden/affiro": "^0.1.1"
+  }
+}
