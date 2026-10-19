@@ -57,7 +57,7 @@ function parseDocumentIDFromUploadRPC(args) {
         return ""
     }
     // log undocumented case 
-    console.log(strs)
+    // console.log(strs)
     return ""
 }
 
@@ -69,7 +69,7 @@ const browserAPI = getBrowserAPI();
 
 browserAPI.runtime.onMessage.addListener((message) => {
   if (message.action === "documentData") {
-    console.log("Received document:", message);
+    // console.log("Received document:", message);
     if (message.classroomTitle != observedClassroomName || message.assignmentTitle != observedAssignmentName) {
         observedClassroomName = message.classroomTitle
         observedAssignmentName = message.assignmentTitle
