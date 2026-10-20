@@ -14,6 +14,11 @@ function randomID(length) {
 
 function applyAuthenticated(v) {
     document.documentElement.setAttribute("authenticated", v);
+    if (v == "true") {
+        els.loginBtn.setAttribute('title', 'Log Out')
+    } else {
+        els.loginBtn.setAttribute('title', 'Log In')
+    }
 }
 
 // A stored token may already be dead, so ask the server and forget it if so.

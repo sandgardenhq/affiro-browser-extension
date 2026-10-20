@@ -25,6 +25,7 @@ function loadAuth({
 } = {}) {
     delete require.cache[require.resolve("./auth.js")];
     globalThis.document = fakeDocument(authenticated);
+    globalThis.els = { loginBtn: {setAttribute: (a,b) => {}}}
     globalThis.getAPIBaseURL = getAPIBaseURL;
     globalThis.browserAPI = {
         tabs: {
