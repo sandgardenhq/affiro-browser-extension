@@ -34,7 +34,8 @@
         "webRequest"
     ],
     "host_permissions": [
-        "*://classroom.google.com/*"
+        "*://classroom.google.com/*",
+        "*://docs.google.com/*"
     ],
     "browser_specific_settings": {
         "gecko": {
