@@ -1,3 +1,4 @@
+// console.log("background script started")
 // TODO: dedupe this section:
 ///
 function getBrowserAPI() {
@@ -66,23 +67,22 @@ let observedAssignmentName = ""
 
 const browserAPI = getBrowserAPI();
 
-
 browserAPI.runtime.onMessage.addListener((message) => {
-  if (message.action === "documentData") {
-    // console.log("Received document:", message);
-    if (message.classroomTitle != observedClassroomName || message.assignmentTitle != observedAssignmentName) {
-        observedClassroomName = message.classroomTitle
-        observedAssignmentName = message.assignmentTitle
+    //console.log("runtime message")
+    if (message.action === "documentData") {
+        // console.log("Received document:", message);
+        observedAssignmentName = message.assignmentTitle;
+        observedClassroomName = message.classroomTitle;
         const monitor = async () => {
             const postURL = (await getAPIBaseURL()) + "/api/v1/monitoring/assignment-exists?"+
-                `assignment=${encodeURIComponent(observedAssignmentName)}`+
-                `&classroom=${encodeURIComponent(observedClassroomName)}`;
+                `assignment=${encodeURIComponent(message.assignmentTitle)}`+
+                `&classroom=${encodeURIComponent(message.classroomTitle)}`;
             let headers = {}
             await browserAPI.storage.local.get("authToken").then((result) => {
                 headers['Authorization'] = "Bearer " + result.authToken;
             });
             //console.log("sending monitor fetch", postURL)
-             const response = await fetch(postURL, {
+            const response = await fetch(postURL, {
                 method: "POST",
                 headers: headers,
             });
@@ -92,13 +92,13 @@ browserAPI.runtime.onMessage.addListener((message) => {
         }
         monitor()
     } 
-  }
 });
 
 
 if (!browserAPI.webRequest) {
     console.log("no web request api available")
 } else {
+    //console.log("registering webRequest proxy")
     browserAPI.webRequest.onBeforeRequest.addListener((details) => {
         if (!details.url) {
             return 
@@ -121,7 +121,7 @@ if (!browserAPI.webRequest) {
         // NB this is a string
         const rawReq = details.requestBody.formData["f.req"][0]
 
-        //console.log("request sent", rawReq)
+        //console.log("batchexecute request sent", rawReq)
         const docID = parseDocumentIDFromUploadRPC(rawReq)
         //console.log("document ID", docID)
         if (docID) {
@@ -134,13 +134,16 @@ if (!browserAPI.webRequest) {
                 await browserAPI.storage.local.get("authToken").then((result) => {
                     headers['Authorization'] = "Bearer " + result.authToken;
                 });
+                //console.log("posting to", postURL)
                 const response = await fetch(postURL, {
                     method: "POST",
                     headers: headers,
                 });
                 if (response.status !== 200) {
                     console.error("Submission failed", response.status);
-                }
+                } // else {
+                    //console.info("submission succeeded")
+                // }
             }
             submit()
         }
