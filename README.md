@@ -1,6 +1,18 @@
-# affiro
+# affiro-browser-extension
 
-`web-ext run` to deploy to firefox automatically
+The Affiro browser extension allows users to track signatures and submit them to app.affiro.com to verify the authenticity of documents. It also automatically integrates with google docs and google classroom. 
+
+## Running 
+
+Official versions can be found in the chrome / firefox web stores, but this code can be run in the following ways:
+
+Firefox: `about:debugging#/runtime/this-firefox` -> "Load Temporary Add-on" -> select this directory's `manifest.json`.
+
+Chrome: `chrome://extensions` -> enable "Developer mode" -> "Load unpacked" -> select this directory.
+
+Safari: Menu bar -> 'Safari' -> 'Safari Extensions' -> 'Developer' -> 'Allow unsigned extensions' -> 'Add Temporary Extension' -> select this directory.
+
+You can also use `web-ext run` to deploy to firefox automatically.
 
 ## Third-party code
 
@@ -11,14 +23,6 @@ client-side.
 `vendor/affiro.min.js` is a vendored, built copy of the [`@sandgarden/affiro`](https://www.npmjs.com/package/@sandgarden/affiro)
 npm package (this extension's own signature-monitoring code, packaged for embedding on any page; source lives in the
 public [sandgardenhq/affiro-js](https://github.com/sandgardenhq/affiro-js) repo). 
-
-## Loading unpacked, for local testing
-
-Firefox: `about:debugging#/runtime/this-firefox` -> "Load Temporary Add-on" -> select this directory's `manifest.json`.
-
-Chrome: `chrome://extensions` -> enable "Developer mode" -> "Load unpacked" -> select this directory.
-
-Safari: Menu bar -> 'Safari' -> 'Safari Extensions' -> 'Developer' -> 'Allow unsigned extensions' -> 'Add Temporary Extension' -> select this directory.
 
 ## Building for release 
 

@@ -67,7 +67,6 @@ function findChunkForm1(text) {
 }
 
 function findChunkForm2(text) {
-    console.log("trying form 2")
     const needle = "var modelChunk = {"
     const chunkStart = text.indexOf(needle)
     if (chunkStart == -1) {
@@ -86,9 +85,6 @@ function findChunkForm2(text) {
     //console.log(chunkCandidate)
     const parsedChunk = JSON.parse(chunkCandidate)
     const document = parsedChunk.s
-    // NEXT!!!
-    // TODO: this document is incorrect!
-    console.log(parsedChunk)
     return document 
 }
 
@@ -133,7 +129,8 @@ if (window.location.hostname == 'docs.google.com' && window.location.pathname.st
                 });
                 if (response.status !== 200) {
                     console.error("Post failed", response.status);
-                } // else {
+                }  
+                // else {
                 //     console.info("Post success", postURL)
                 // }
             } catch (error) {
