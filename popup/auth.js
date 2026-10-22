@@ -49,31 +49,6 @@ async function initAuthenticated() {
     }
 }
 
-function initWatchAuthClaim() {
-    browserAPI.storage.local.get("clientSlug").then((result) => {
-        if (!result.clientSlug) {
-            return 
-        }
-        const claimAuth = async () => {
-            try {
-                const claimURL = (await getAPIBaseURL())+"/api/v1/auth/claim?client-slug="+result.clientSlug;
-                const response = await fetch(claimURL);
-                if (response.status !== 200) {
-                    console.log("Auth failed");
-                    return
-                }
-                const data = await response.json();
-                browserAPI.storage.local.set({ authToken: data.token });
-                applyAuthenticated("true");
-                browserAPI.storage.local.remove("clientSlug")
-            } catch (error) {
-                console.error('Error making API request:', error);
-                browserAPI.storage.local.remove("clientSlug")
-            }
-        };
-        claimAuth();
-    })
-}
 
 async function loginClick() {
      const authed = document.documentElement.getAttribute("authenticated")
@@ -106,5 +81,5 @@ async function loginClick() {
 }
 
 if (typeof module !== "undefined") {
-    module.exports = { randomID, applyAuthenticated, initAuthenticated, initWatchAuthClaim, loginClick };
+    module.exports = { randomID, applyAuthenticated, initAuthenticated, loginClick };
 }

@@ -79,6 +79,7 @@ browserAPI.runtime.onMessage.addListener((message) => {
                 `&classroom=${encodeURIComponent(message.classroomTitle)}`;
             let headers = {}
             await browserAPI.storage.local.get("authToken").then((result) => {
+                // console.log("auth result", result)
                 headers['Authorization'] = "Bearer " + result.authToken;
             });
             //console.log("sending monitor fetch", postURL)
@@ -156,3 +157,44 @@ if (!browserAPI.webRequest) {
 // payload example from google classrooms
 // POST https://classroom.google.com/u/0/_/ClassroomUi/data/batchexecute
 // f.req=%5B%5B%5B%22CVt8yf%22%2C%22%5B%5B3%5D%2C%5B%5B%5B872432243584%2C%5B872432519930%2C%5B872432213238%5D%5D%5D%2C%5B%5B872432243584%2C%5B872432519930%2C%5B872432213238%5D%5D%5D%2Cnull%2Cnull%2Cnull%2C%5B%5Bnull%2Cnull%2C%5C%221LGox6qyJ2_KXgJO_cern-OLibp9AKy8lwO4Uq00N6JM%5C%22%2C2%2C%5C%22application%2Fvnd.google-apps.document%5C%22%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2C%5Bnull%2C2%5D%2Cnull%2Cnull%2C-19931940520%2Cnull%2Cnull%2C1%5D%5D%5D%2C%5Bnull%2C1%5D%5D%5D%2C%5Bnull%2C1%2Cnull%2C1%2C1%2Cnull%2C1%2C1%2C1%2Cnull%2Cnull%2Cnull%2C1%2Cnull%2C%5B1%5D%2Cnull%2Cnull%2Cnull%2C1%2C1%2C1%2Cnull%2Cnull%2Cnull%2C%5B%5B1%2C1%5D%5D%2C%5B%5B1%2C1%5D%5D%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2C1%5D%5D%22%2Cnull%2C%22generic%22%5D%5D%5D&at=ACv6I2t_VTGVnvReb0r9pbng7RgS%3A1789588106645&
+
+function initWatchAuthClaim() {
+    //console.log("watching auth")
+    const claimAuthIfSlugPresent = () => {
+        browserAPI.storage.local.get("clientSlug").then((result) => {
+            if (!result.clientSlug) {
+                return 
+            }
+            const claimAuth = async () => {
+                // console.log("claiming auth")
+                try {
+                    const claimURL = (await getAPIBaseURL())+"/api/v1/auth/claim?client-slug="+result.clientSlug;
+                    const response = await fetch(claimURL);
+                    if (response.status !== 200) {
+                        console.log("Auth failed");
+                        return
+                    }
+                    const data = await response.json();
+                    // console.log("auth success", data)
+                    browserAPI.storage.local.set({ authToken: data.token });
+                    applyAuthenticated("true");
+                    browserAPI.storage.local.remove("clientSlug")
+                } catch (error) {
+                    // console.error('Error making API request:', error);
+                    browserAPI.storage.local.remove("clientSlug")
+                }
+            };
+            claimAuth();
+        })
+    }
+
+    claimAuthIfSlugPresent();
+    browserAPI.runtime.onMessage.addListener((message, sender, sendResponse) => {
+        if (message.action === 'visibilityChanged' && !message.isHidden) {
+            // console.log("claiming auth on tab-in")
+            claimAuthIfSlugPresent();
+        }
+    })
+}
+
+initWatchAuthClaim();

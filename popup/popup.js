@@ -26,6 +26,5 @@ watchForModeToggleHotkey(() => {
 
 initTheme();
 initAuthenticated();
-initWatchAuthClaim();
 setView("home");
 fetchSignature();

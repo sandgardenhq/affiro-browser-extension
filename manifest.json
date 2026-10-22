@@ -12,8 +12,8 @@
     ],
     "web_accessible_resources": [
         {
-        "matches": ["<all_urls>"],
-        "resources": ["popup.js"]
+            "matches": ["<all_urls>"],
+            "resources": ["popup.js"]
         }
     ],
     "background": {
