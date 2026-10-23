@@ -17,6 +17,9 @@ function fakeBrowserAPI(initialStorage = {}) {
 function loadAPIConfig(browserAPI) {
     delete require.cache[require.resolve("./api-config.js")];
     globalThis.getBrowserAPI = () => browserAPI;
+    globalThis.document = {
+        addEventListener: (a, b) => {}
+    }
     return require("./api-config.js");
 }
 
