@@ -49,13 +49,15 @@ function watchForModeToggleHotkey(onTriggered, target = document) {
     return () => target.removeEventListener("keydown", handler);
 }
 
-document.addEventListener('visibilitychange', () => {
-  const browser = getBrowserAPI();
-  browser.runtime.sendMessage({
-    action: 'visibilityChanged',
-    isHidden: document.hidden,
-  });
-});
+if (document) {
+    document.addEventListener('visibilitychange', () => {
+        const browser = getBrowserAPI();
+        browser.runtime.sendMessage({
+            action: 'visibilityChanged',
+            isHidden: document.hidden,
+        });
+    });
+}
 
 
 if (typeof module !== "undefined") {
