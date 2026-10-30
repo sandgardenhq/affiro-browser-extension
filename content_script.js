@@ -44,29 +44,34 @@ if (iframes) {
 // to work on.
 
 function findChunkForm1(text) {
-    const needle = "DOCS_modelChunk = {"
-    const chunkStart = text.indexOf(needle)
-    if (chunkStart == -1) {
-        //console.log("no docs_modelChunk")
-        return ""
+    var output = "";
+    while (true) {
+        const needle = "DOCS_modelChunk = {"
+        const chunkStart = text.indexOf(needle)
+        if (chunkStart == -1) {
+            //console.log("no docs_modelChunk")
+            return output
+        }
+        const chunk = text.slice(chunkStart+needle.length)
+        // TODO: presumably, larger documents come in more chunks?
+        // "chunk": [{
+        //     "ty": "is",
+        //     "ibi": 1,
+        //     "s": "Your typing"
+        // },
+        const openCurl = chunk.indexOf("{")
+        const closeCurl = chunk.slice(openCurl).indexOf("}")
+        const chunkCandidate = chunk.slice(openCurl, openCurl+closeCurl+1)
+        //console.log(chunkCandidate)
+        const parsedChunk = JSON.parse(chunkCandidate)
+        output += parsedChunk.s
+        text = chunk.slice(closeCurl+1)
     }
-    const chunk = text.slice(chunkStart+needle.length)
-    // TODO: presumably, larger documents come in more chunks?
-    // "chunk": [{
-    //     "ty": "is",
-    //     "ibi": 1,
-    //     "s": "If you type something in here!as asaaasasasdasdasdasdsonaonsuvouasvnsvonasonsfnosabnoasfbinoadsbfnoadsfnobadfbadfbadfbadfbadfbadfba\n\n\n\n\n\n\nAbracadabra\n\n\n\n\n\n\n\n\n\n\n\nWhos watching\n\n\nTest "
-    // },
-    const openCurl = chunk.indexOf("{")
-    const closeCurl = chunk.slice(openCurl).indexOf("}")
-    const chunkCandidate = chunk.slice(openCurl, openCurl+closeCurl+1)
-    //console.log(chunkCandidate)
-    const parsedChunk = JSON.parse(chunkCandidate)
-    const document = parsedChunk.s
-    return document 
 }
 
 function findChunkForm2(text) {
+    // TODO: it's likely that there can be multiple `var modelChunk = {` sections
+    // just like there can be chunks of form 1, but we haven't observed them yet
     const needle = "var modelChunk = {"
     const chunkStart = text.indexOf(needle)
     if (chunkStart == -1) {
